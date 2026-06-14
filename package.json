@@ -1,11 +1,11 @@
 {
   "name": "@iryanraushan/notchify",
-  "version": "1.0.3",
+  "version": "1.0.5",
   "description": "A classic toast notification library for React and Next.js",
   "author": "Raushan Kumar",
   "license": "MIT",
 
-  "homepage": "https://github.com/iryanraushan/notchify",
+  "homepage": "https://notchify.vercel.app",
   "repository": {
     "type": "git",
     "url": "git+https://github.com/iryanraushan/notchify.git"
@@ -53,7 +53,9 @@
     "build": "tsup",
     "dev": "tsup --watch",
     "prepublishOnly": "npm run build",
-    "preview": "vite"
+    "preview": "vite",
+    "preview:build": "vite build",
+    "preview:dev": "vite"
   },
 
   "peerDependencies": {
