@@ -232,4 +232,3 @@ export default function RootLayout({ children }) {
 ## License
 
 MIT © [Raushan Kumar](https://github.com/iryanraushan)
-# notchify
