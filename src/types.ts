@@ -1,5 +1,12 @@
 export type ToastVariant = "default" | "destructive" | "success";
 export type ToastMode = "dark" | "light";
+export type ToastPosition =
+  | "top-left"
+  | "top-center"
+  | "top-right"
+  | "bottom-left"
+  | "bottom-center"
+  | "bottom-right";
 
 export interface ToastTheme {
   background?: string;
@@ -25,4 +32,5 @@ export interface ToastContextValue {
   dismiss: (id: string) => void;
   theme: ToastTheme;
   mode: ToastMode;
+  position: ToastPosition;
 }

@@ -21,6 +21,8 @@ Dark & light mode ready. Fully themeable. Zero config to get started.
 ## Features
 
 - Dark & light mode out of the box
+- Responsive — automatically adapts to mobile (≤768px) like Android native toasts
+- Smooth enter/exit animations per position
 - Fully customizable colors, background, border, shadow, and duration
 - Lightweight — no extra dependencies beyond Radix UI
 - Works with React 17+ and Next.js (App & Pages router)
@@ -131,6 +133,45 @@ Pass `mode` to `ToastProvider`. Defaults to `dark`.
 
 ---
 
+## Positioning
+
+Set the `position` prop on `ToastProvider` to control where toasts appear. All toasts use the same position.
+
+```tsx
+<ToastProvider position="top-right">
+  {children}
+</ToastProvider>
+```
+
+**Supported positions:**
+
+| Value | Description |
+|---|---|
+| `top-left` | Top-left corner |
+| `top-center` | Top center |
+| `top-right` | Top-right corner |
+| `bottom-left` | Bottom-left corner |
+| `bottom-center` | Bottom center |
+| `bottom-right` | Bottom-right corner |
+
+### Default behavior
+
+| Screen | Default position |
+|---|---|
+| Desktop (>768px) | `bottom-right` |
+| Mobile (≤768px) | `bottom-center` |
+
+### Responsive behavior (mobile ≤768px)
+
+On small screens, the `position` prop is automatically simplified for a native-app feel:
+
+- Any `top-*` position → `top-center` (offset from top edge)
+- Any `bottom-*` position → `bottom-center` (offset from bottom edge)
+
+Toasts are horizontally centered and never pinned to the absolute edge.
+
+---
+
 ## Custom Theme
 
 Override any visual token globally via the `theme` prop on `ToastProvider`.  
@@ -165,8 +206,11 @@ Any value you skip falls back to the default for the current mode.
 | Prop | Type | Default | Description |
 |---|---|---|---|
 | `mode` | `"dark" \| "light"` | `"dark"` | Color mode |
+| `position` | `ToastPosition` | `"bottom-right"` | Toast position (desktop). See responsive behavior for mobile. |
 | `theme` | `ToastTheme` | `{}` | Theme overrides |
 | `children` | `ReactNode` | — | Your app |
+
+**`ToastPosition`** — `"top-left" | "top-center" | "top-right" | "bottom-left" | "bottom-center" | "bottom-right"`
 
 ### `ToastTheme`
 
@@ -208,7 +252,7 @@ If you're using the App Router, mark your layout as a client component or extrac
 import { ToastProvider } from 'notchify';
 
 export function Providers({ children }: { children: React.ReactNode }) {
-  return <ToastProvider mode="dark">{children}</ToastProvider>;
+  return <ToastProvider mode="dark" position="bottom-right">{children}</ToastProvider>;
 }
 ```
 

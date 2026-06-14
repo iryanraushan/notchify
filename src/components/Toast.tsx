@@ -1,6 +1,6 @@
 import * as React from "react";
 import * as ToastPrimitives from "@radix-ui/react-toast";
-import { ToastVariant, ToastTheme, ToastMode } from "../types";
+import { ToastVariant, ToastTheme, ToastMode, ToastPosition } from "../types";
 import { ToastContext } from "./ToastProvider";
 
 const defaultDotColors: Record<ToastVariant, string> = {
@@ -25,6 +25,85 @@ const defaultLight: Required<Omit<ToastTheme, "dotColors">> = {
   defaultDuration: 3000,
 };
 
+function useIsMobile() {
+  const [isMobile, setIsMobile] = React.useState(() =>
+    typeof window !== "undefined" ? window.innerWidth <= 768 : false
+  );
+  React.useEffect(() => {
+    const mq = window.matchMedia("(max-width: 768px)");
+    const handler = (e: MediaQueryListEvent) => setIsMobile(e.matches);
+    mq.addEventListener("change", handler);
+    return () => mq.removeEventListener("change", handler);
+  }, []);
+  return isMobile;
+}
+
+function getViewportStyle(position: ToastPosition, isMobile: boolean): React.CSSProperties {
+  const isTop = position.startsWith("top");
+
+  if (isMobile) {
+    return {
+      position: "fixed",
+      left: "50%",
+      transform: "translateX(-50%)",
+      ...(isTop ? { top: 16 } : { bottom: 24 }),
+      zIndex: 9999,
+      display: "flex",
+      flexDirection: "column",
+      gap: 8,
+      width: "calc(100vw - 32px)",
+      maxWidth: 420,
+      padding: 0,
+      pointerEvents: "none",
+    };
+  }
+
+  const base: React.CSSProperties = {
+    position: "fixed",
+    zIndex: 9999,
+    display: "flex",
+    flexDirection: "column",
+    gap: 8,
+    maxWidth: 420,
+    width: "calc(100vw - 32px)",
+    padding: 0,
+    pointerEvents: "none",
+  };
+
+  switch (position) {
+    case "top-left": return { ...base, top: 16, left: 16 };
+    case "top-center": return { ...base, top: 16, left: "50%", transform: "translateX(-50%)" };
+    case "top-right": return { ...base, top: 16, right: 16 };
+    case "bottom-left": return { ...base, bottom: 16, left: 16 };
+    case "bottom-center": return { ...base, bottom: 16, left: "50%", transform: "translateX(-50%)" };
+    case "bottom-right": return { ...base, bottom: 16, right: 16 };
+  }
+}
+
+const animationStyle = `
+@keyframes toast-slide-in-right { from { transform: translateX(calc(100% + 16px)); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+@keyframes toast-slide-in-left  { from { transform: translateX(calc(-100% - 16px)); opacity: 0; } to { transform: translateX(0); opacity: 1; } }
+@keyframes toast-slide-in-up    { from { transform: translateY(calc(100% + 8px)); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@keyframes toast-slide-in-down  { from { transform: translateY(calc(-100% - 8px)); opacity: 0; } to { transform: translateY(0); opacity: 1; } }
+@keyframes toast-fade-out       { from { opacity: 1; transform: scale(1); } to { opacity: 0; transform: scale(0.95); } }
+[data-state="open"][data-pos="top-left"]     { animation: toast-slide-in-left  180ms ease-out; }
+[data-state="open"][data-pos="top-center"]   { animation: toast-slide-in-down  180ms ease-out; }
+[data-state="open"][data-pos="top-right"]    { animation: toast-slide-in-right 180ms ease-out; }
+[data-state="open"][data-pos="bottom-left"]  { animation: toast-slide-in-left  180ms ease-out; }
+[data-state="open"][data-pos="bottom-center"]{ animation: toast-slide-in-up    180ms ease-out; }
+[data-state="open"][data-pos="bottom-right"] { animation: toast-slide-in-right 180ms ease-out; }
+[data-state="closed"] { animation: toast-fade-out 150ms ease-in forwards; }
+`;
+
+let styleInjected = false;
+function injectAnimations() {
+  if (styleInjected || typeof document === "undefined") return;
+  const el = document.createElement("style");
+  el.textContent = animationStyle;
+  document.head.appendChild(el);
+  styleInjected = true;
+}
+
 const CloseIcon = ({ color }: { color: string }) => (
   <svg width="7" height="7" viewBox="0 0 10 10" fill="none" aria-hidden="true">
     <line x1="1" y1="1" x2="9" y2="9" stroke={color} strokeWidth="2" strokeLinecap="round" />
@@ -35,26 +114,22 @@ const CloseIcon = ({ color }: { color: string }) => (
 export const ToastViewport = React.forwardRef<
   React.ElementRef<typeof ToastPrimitives.Viewport>,
   React.ComponentPropsWithoutRef<typeof ToastPrimitives.Viewport>
->(({ style, ...props }, ref) => (
-  <ToastPrimitives.Viewport
-    ref={ref}
-    style={{
-      position: "fixed",
-      top: 16,
-      right: 16,
-      zIndex: 9999,
-      display: "flex",
-      flexDirection: "column",
-      gap: 8,
-      maxWidth: 420,
-      width: "calc(100vw - 32px)",
-      padding: 8,
-      pointerEvents: "none",
-      ...style,
-    }}
-    {...props}
-  />
-));
+>(({ style, ...props }, ref) => {
+  const ctx = React.useContext(ToastContext);
+  const position = ctx?.position ?? "bottom-right";
+  const isMobile = useIsMobile();
+  const resolvedPosition: ToastPosition = isMobile
+    ? position.startsWith("top") ? "top-center" : "bottom-center"
+    : position;
+
+  return (
+    <ToastPrimitives.Viewport
+      ref={ref}
+      style={{ ...getViewportStyle(resolvedPosition, isMobile), ...style }}
+      {...props}
+    />
+  );
+});
 ToastViewport.displayName = "ToastViewport";
 
 interface ToastRootProps extends React.ComponentPropsWithoutRef<typeof ToastPrimitives.Root> {
@@ -70,6 +145,13 @@ export const Toast = React.forwardRef<React.ElementRef<typeof ToastPrimitives.Ro
     const ctx = React.useContext(ToastContext);
     const resolvedMode = mode ?? ctx?.mode ?? "dark";
     const resolvedTheme = theme ?? ctx?.theme ?? {};
+    const position = ctx?.position ?? "bottom-right";
+    const isMobile = useIsMobile();
+    const resolvedPosition: ToastPosition = isMobile
+      ? position.startsWith("top") ? "top-center" : "bottom-center"
+      : position;
+
+    React.useEffect(() => { injectAnimations(); }, []);
 
     const base = resolvedMode === "light" ? defaultLight : defaultDark;
     const dotColor = resolvedTheme.dotColors?.[variant] ?? defaultDotColors[variant];
@@ -83,6 +165,7 @@ export const Toast = React.forwardRef<React.ElementRef<typeof ToastPrimitives.Ro
         ref={ref}
         duration={duration}
         onOpenChange={(open) => !open && onDismiss?.()}
+        data-pos={resolvedPosition}
         style={{
           display: "flex",
           alignItems: "center",

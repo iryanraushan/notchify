@@ -1,7 +1,7 @@
 import * as React from "react";
 import * as ToastPrimitives from "@radix-ui/react-toast";
 import { Toast, ToastViewport } from "./Toast";
-import { ToastItem, ToastOptions, ToastContextValue, ToastTheme, ToastMode } from "../types";
+import { ToastItem, ToastOptions, ToastContextValue, ToastTheme, ToastMode, ToastPosition } from "../types";
 
 export const ToastContext = React.createContext<ToastContextValue | null>(null);
 
@@ -9,9 +9,10 @@ interface ToastProviderProps {
   children: React.ReactNode;
   theme?: ToastTheme;
   mode?: ToastMode;
+  position?: ToastPosition;
 }
 
-export function ToastProvider({ children, theme = {}, mode = "dark" }: ToastProviderProps) {
+export function ToastProvider({ children, theme = {}, mode = "dark", position = "bottom-right" }: ToastProviderProps) {
   const [toasts, setToasts] = React.useState<ToastItem[]>([]);
 
   const toast = React.useCallback((options: ToastOptions) => {
@@ -24,7 +25,7 @@ export function ToastProvider({ children, theme = {}, mode = "dark" }: ToastProv
   }, []);
 
   return (
-    <ToastContext.Provider value={{ toast, dismiss, theme, mode }}>
+    <ToastContext.Provider value={{ toast, dismiss, theme, mode, position }}>
       <ToastPrimitives.Provider swipeDirection="right">
         {children}
         {toasts.map((t) => (
