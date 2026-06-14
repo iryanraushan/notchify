@@ -10,10 +10,10 @@ Dark & light mode ready. Fully themeable. Zero config to get started.
   </tr>
   <tr>
     <td>
-      <img src="https://github.com/user-attachments/assets/bde9d771-9958-4616-8c53-71b36e2cccf1" alt="Dark Mode" width="450" />
+      <img width="963" height="569" alt="dark_mode_preview" src="https://github.com/user-attachments/assets/d6626738-2828-4a40-874c-7ae86b61fee1"/>
     </td>
     <td>
-      <img src="https://github.com/user-attachments/assets/291fa618-6eb2-4ede-8fc3-8d33302fa8eb" alt="Light Mode" width="450" />
+       <img width="943" height="529" alt="light_mode_preview" src="https://github.com/user-attachments/assets/e8477cd6-a800-4f79-9b5f-ad270985a6d9" />    
     </td>
   </tr>
 </table>
