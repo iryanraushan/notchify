@@ -1,5 +1,4 @@
 import * as React from "react";
-import * as ToastPrimitives from "@radix-ui/react-toast";
 import { Toast, ToastViewport } from "./Toast";
 import { ToastItem, ToastOptions, ToastContextValue, ToastTheme, ToastMode, ToastPosition } from "../types";
 
@@ -26,20 +25,18 @@ export function ToastProvider({ children, theme = {}, mode = "dark", position = 
 
   return (
     <ToastContext.Provider value={{ toast, dismiss, theme, mode, position }}>
-      <ToastPrimitives.Provider swipeDirection="right">
-        {children}
+      {children}
+      <ToastViewport>
         {toasts.map((t) => (
           <Toast
             key={t.id}
-            open
             variant={t.variant}
             duration={t.duration ?? theme.defaultDuration ?? 3000}
             message={t.message}
             onDismiss={() => dismiss(t.id)}
           />
         ))}
-        <ToastViewport />
-      </ToastPrimitives.Provider>
+      </ToastViewport>
     </ToastContext.Provider>
   );
 }

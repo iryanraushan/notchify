@@ -1,5 +1,4 @@
 import * as React from "react";
-import * as ToastPrimitives from "@radix-ui/react-toast";
 import { ToastVariant, ToastTheme, ToastMode, ToastPosition } from "../types";
 import { ToastContext } from "./ToastProvider";
 
@@ -111,37 +110,18 @@ const CloseIcon = ({ color }: { color: string }) => (
   </svg>
 );
 
-export const ToastViewport = React.forwardRef<
-  React.ElementRef<typeof ToastPrimitives.Viewport>,
-  React.ComponentPropsWithoutRef<typeof ToastPrimitives.Viewport>
->(({ style, ...props }, ref) => {
-  const ctx = React.useContext(ToastContext);
-  const position = ctx?.position ?? "bottom-right";
-  const isMobile = useIsMobile();
-  const resolvedPosition: ToastPosition = isMobile
-    ? position.startsWith("top") ? "top-center" : "bottom-center"
-    : position;
-
-  return (
-    <ToastPrimitives.Viewport
-      ref={ref}
-      style={{ ...getViewportStyle(resolvedPosition, isMobile), ...style }}
-      {...props}
-    />
-  );
-});
-ToastViewport.displayName = "ToastViewport";
-
-interface ToastRootProps extends React.ComponentPropsWithoutRef<typeof ToastPrimitives.Root> {
+export interface ToastProps {
   variant?: ToastVariant;
+  duration?: number;
   message: string;
   onDismiss?: () => void;
   theme?: ToastTheme;
   mode?: ToastMode;
+  style?: React.CSSProperties;
 }
 
-export const Toast = React.forwardRef<React.ElementRef<typeof ToastPrimitives.Root>, ToastRootProps>(
-  ({ variant = "default", duration = 3000, message, onDismiss, style, theme, mode, ...props }, ref) => {
+export const Toast = React.forwardRef<HTMLDivElement, ToastProps>(
+  ({ variant = "default", duration = 3000, message, onDismiss, style, theme, mode }, ref) => {
     const ctx = React.useContext(ToastContext);
     const resolvedMode = mode ?? ctx?.mode ?? "dark";
     const resolvedTheme = theme ?? ctx?.theme ?? {};
@@ -151,7 +131,20 @@ export const Toast = React.forwardRef<React.ElementRef<typeof ToastPrimitives.Ro
       ? position.startsWith("top") ? "top-center" : "bottom-center"
       : position;
 
+    const [state, setState] = React.useState<"open" | "closed">("open");
+
     React.useEffect(() => { injectAnimations(); }, []);
+
+    React.useEffect(() => {
+      const dismiss = setTimeout(() => setState("closed"), duration);
+      return () => clearTimeout(dismiss);
+    }, [duration]);
+
+    React.useEffect(() => {
+      if (state !== "closed") return;
+      const remove = setTimeout(() => onDismiss?.(), 150);
+      return () => clearTimeout(remove);
+    }, [state, onDismiss]);
 
     const base = resolvedMode === "light" ? defaultLight : defaultDark;
     const dotColor = resolvedTheme.dotColors?.[variant] ?? defaultDotColors[variant];
@@ -161,10 +154,11 @@ export const Toast = React.forwardRef<React.ElementRef<typeof ToastPrimitives.Ro
     const shadow = resolvedTheme.boxShadow ?? base.boxShadow;
 
     return (
-      <ToastPrimitives.Root
+      <div
         ref={ref}
-        duration={duration}
-        onOpenChange={(open) => !open && onDismiss?.()}
+        role="status"
+        aria-live="polite"
+        data-state={state}
         data-pos={resolvedPosition}
         style={{
           display: "flex",
@@ -181,34 +175,49 @@ export const Toast = React.forwardRef<React.ElementRef<typeof ToastPrimitives.Ro
           lineHeight: 1.5,
           ...style,
         }}
-        {...props}
       >
-        <ToastPrimitives.Close asChild>
-          <button
-            aria-label="Dismiss"
-            style={{
-              width: 14,
-              height: 14,
-              borderRadius: "50%",
-              background: dotColor,
-              border: "none",
-              cursor: "pointer",
-              flexShrink: 0,
-              display: "flex",
-              alignItems: "center",
-              justifyContent: "center",
-              padding: 1,
-            }}
-          >
-            <CloseIcon color={"#ffffff"} />
-          </button>
-        </ToastPrimitives.Close>
-
-        <ToastPrimitives.Description style={{ flex: 1, color: textColor, fontSize: 14 }}>
-          {message}
-        </ToastPrimitives.Description>
-      </ToastPrimitives.Root>
+        <button
+          aria-label="Dismiss"
+          onClick={() => setState("closed")}
+          style={{
+            width: 14,
+            height: 14,
+            borderRadius: "50%",
+            background: dotColor,
+            border: "none",
+            cursor: "pointer",
+            flexShrink: 0,
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: 1,
+          }}
+        >
+          <CloseIcon color="#ffffff" />
+        </button>
+        <span style={{ flex: 1, color: textColor, fontSize: 14 }}>{message}</span>
+      </div>
     );
   }
 );
 Toast.displayName = "Toast";
+
+export const ToastViewport = React.forwardRef<HTMLDivElement, React.HTMLAttributes<HTMLDivElement>>(
+  ({ style, ...props }, ref) => {
+    const ctx = React.useContext(ToastContext);
+    const position = ctx?.position ?? "bottom-right";
+    const isMobile = useIsMobile();
+    const resolvedPosition: ToastPosition = isMobile
+      ? position.startsWith("top") ? "top-center" : "bottom-center"
+      : position;
+
+    return (
+      <div
+        ref={ref}
+        style={{ ...getViewportStyle(resolvedPosition, isMobile), ...style }}
+        {...props}
+      />
+    );
+  }
+);
+ToastViewport.displayName = "ToastViewport";

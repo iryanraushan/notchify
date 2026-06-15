@@ -55,10 +55,7 @@
     "react-dom": ">=18"
   },
   "dependencies": {
-    "@radix-ui/react-toast": "^1.2.0",
-    "@vercel/analytics": "^2.0.1",
-    "class-variance-authority": "^0.7.0",
-    "clsx": "^2.0.0"
+    "@vercel/analytics": "^2.0.1"
   },
   "devDependencies": {
     "@types/react": "^18",
