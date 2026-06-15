@@ -3,6 +3,7 @@ import * as ToastPrimitives from '@radix-ui/react-toast';
 
 type ToastVariant = "default" | "destructive" | "success";
 type ToastMode = "dark" | "light";
+type ToastPosition = "top-left" | "top-center" | "top-right" | "bottom-left" | "bottom-center" | "bottom-right";
 interface ToastTheme {
     background?: string;
     border?: string;
@@ -24,6 +25,7 @@ interface ToastContextValue {
     dismiss: (id: string) => void;
     theme: ToastTheme;
     mode: ToastMode;
+    position: ToastPosition;
 }
 
 declare const ToastViewport: React.ForwardRefExoticComponent<Omit<ToastPrimitives.ToastViewportProps & React.RefAttributes<HTMLOListElement>, "ref"> & React.RefAttributes<HTMLOListElement>>;
@@ -40,9 +42,10 @@ interface ToastProviderProps {
     children: React.ReactNode;
     theme?: ToastTheme;
     mode?: ToastMode;
+    position?: ToastPosition;
 }
-declare function ToastProvider({ children, theme, mode }: ToastProviderProps): React.JSX.Element;
+declare function ToastProvider({ children, theme, mode, position }: ToastProviderProps): React.JSX.Element;
 
 declare function useToast(): ToastContextValue;
 
-export { Toast, type ToastContextValue, type ToastItem, type ToastMode, type ToastOptions, ToastProvider, type ToastTheme, type ToastVariant, ToastViewport, useToast };
+export { Toast, type ToastContextValue, type ToastItem, type ToastMode, type ToastOptions, type ToastPosition, ToastProvider, type ToastTheme, type ToastVariant, ToastViewport, useToast };

@@ -33,7 +33,7 @@ Dark & light mode ready. Fully themeable. Zero config to get started.
 ## Installation
 
 ```bash
-npm install notchify
+npm i @iryanraushan/notchify
 ```
 
 > Peer dependencies — make sure these are installed in your project:
