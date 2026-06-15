@@ -1,5 +1,6 @@
 import * as React from "react";
 import * as ReactDOM from "react-dom/client";
+import { Analytics } from "@vercel/analytics/react";
 import { ToastProvider } from "../src/components/ToastProvider";
 import { useToast } from "../src/hooks/useToast";
 import type { ToastMode, ToastTheme, ToastPosition } from "../src/types";
@@ -455,4 +456,9 @@ function App() {
   );
 }
 
-ReactDOM.createRoot(document.getElementById("root")!).render(<App />);
+ReactDOM.createRoot(document.getElementById("root")!).render(
+  <>
+    <App />
+    <Analytics />
+  </>
+);

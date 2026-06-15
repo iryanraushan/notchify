@@ -4,7 +4,6 @@
   "description": "A classic toast notification library for React and Next.js",
   "author": "Raushan Kumar",
   "license": "MIT",
-
   "homepage": "https://notchify.vercel.app",
   "repository": {
     "type": "git",
@@ -13,7 +12,6 @@
   "bugs": {
     "url": "https://github.com/iryanraushan/notchify/issues"
   },
-
   "keywords": [
     "toast",
     "notification",
@@ -30,11 +28,9 @@
     "frontend",
     "component-library"
   ],
-
   "main": "./dist/index.js",
   "module": "./dist/index.mjs",
   "types": "./dist/index.d.ts",
-
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -42,13 +38,10 @@
       "require": "./dist/index.js"
     }
   },
-
   "files": [
     "dist"
   ],
-
   "sideEffects": false,
-
   "scripts": {
     "build": "tsup",
     "dev": "tsup --watch",
@@ -57,18 +50,16 @@
     "preview:build": "vite build",
     "preview:dev": "vite"
   },
-
   "peerDependencies": {
     "react": ">=18",
     "react-dom": ">=18"
   },
-
   "dependencies": {
     "@radix-ui/react-toast": "^1.2.0",
+    "@vercel/analytics": "^2.0.1",
     "class-variance-authority": "^0.7.0",
     "clsx": "^2.0.0"
   },
-
   "devDependencies": {
     "@types/react": "^18",
     "@types/react-dom": "^18",
@@ -77,7 +68,6 @@
     "typescript": "^5",
     "vite": "^8.0.16"
   },
-
   "engines": {
     "node": ">=18"
   }
