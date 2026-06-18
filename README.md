@@ -1,6 +1,6 @@
 # notchify
 
-A classic, macOS-style toast notification library for React and Next.js.  
+A classic, toast notification library for React and Next.js.  
 Dark & light mode ready. Fully themeable. Zero config to get started.
 
 <table>

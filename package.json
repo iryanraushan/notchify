@@ -1,69 +1,14 @@
 {
-  "name": "@iryanraushan/notchify",
-  "version": "1.1.6",
-  "description": "A classic toast notification library for React and Next.js",
-  "author": "Raushan Kumar",
-  "license": "MIT",
-  "homepage": "https://notchify.vercel.app",
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/iryanraushan/notchify.git"
-  },
-  "bugs": {
-    "url": "https://github.com/iryanraushan/notchify/issues"
-  },
-  "keywords": [
-    "toast",
-    "notification",
-    "react",
-    "nextjs",
-    "ui",
-    "react-toast",
-    "toast-library",
-    "toast-notification",
-    "radix-ui",
-    "typescript",
-    "alert",
-    "snackbar",
-    "frontend",
-    "component-library"
+  "name": "notchify-monorepo",
+  "private": true,
+  "workspaces": [
+    "packages/*",
+    "apps"
   ],
-  "main": "./dist/index.js",
-  "module": "./dist/index.mjs",
-  "types": "./dist/index.d.ts",
-  "exports": {
-    ".": {
-      "types": "./dist/index.d.ts",
-      "import": "./dist/index.mjs",
-      "require": "./dist/index.js"
-    }
-  },
-  "files": [
-    "dist"
-  ],
-  "sideEffects": false,
   "scripts": {
-    "build": "tsup",
-    "dev": "tsup --watch",
-    "prepublishOnly": "npm run build",
-    "preview": "vite",
-    "preview:build": "vite build",
-    "preview:dev": "vite"
-  },
-  "peerDependencies": {
-    "react": ">=18",
-    "react-dom": ">=18"
-  },
-  "dependencies": {
-    "@vercel/analytics": "^2.0.1"
-  },
-  "devDependencies": {
-    "@types/react": "^18",
-    "@types/react-dom": "^18",
-    "@vitejs/plugin-react": "^6.0.2",
-    "tsup": "^8.0.0",
-    "typescript": "^5",
-    "vite": "^8.0.16"
+    "build": "npm run build --workspace=packages/notchify",
+    "dev:web": "npm run dev --workspace=notchify-web",
+    "build:web": "npm run build --workspace=notchify-web"
   },
   "engines": {
     "node": ">=18"

@@ -1,9 +1,6 @@
 import * as React from "react";
-import * as ReactDOM from "react-dom/client";
-import { Analytics } from "@vercel/analytics/react";
-import { ToastProvider } from "../src/components/ToastProvider";
-import { useToast } from "../src/hooks/useToast";
-import type { ToastMode, ToastTheme, ToastPosition } from "../src/types";
+import { ToastProvider, useToast } from "@iryanraushan/notchify";
+import type { ToastMode, ToastTheme, ToastPosition } from "@iryanraushan/notchify";
 
 const VARIANTS = [
   { label: "Default", variant: "default" as const, message: "Profile updated successfully.", color: "#3b82f6" },
@@ -87,14 +84,7 @@ function PositionGrid({
   const inactiveColor = isDark ? "#666" : "#aaa";
 
   return (
-    <div
-      style={{
-        display: "grid",
-        gridTemplateColumns: "repeat(3, 1fr)",
-        gap: 6,
-        width: "100%",
-      }}
-    >
+    <div style={{ display: "grid", gridTemplateColumns: "repeat(3, 1fr)", gap: 6, width: "100%" }}>
       {DESKTOP_POSITIONS.map((p) => {
         const active = p === selected;
         return (
@@ -241,8 +231,7 @@ function CopyButton({ text, isDark }: { text: string; isDark: boolean }) {
       setCopied(true);
       setTimeout(() => setCopied(false), 1500);
       toast({ message: "Command copied to clipboard!", variant: "success" });
-    } catch {
-    }
+    } catch {}
   };
 
   return (
@@ -283,7 +272,7 @@ function SectionLabel({ children, isDark }: { children: React.ReactNode; isDark:
   );
 }
 
-function App() {
+export default function App() {
   const [mode, setMode] = React.useState<ToastMode>("dark");
   const [position, setPosition] = React.useState<ToastPosition>("bottom-right");
   const isMobile = useIsMobile();
@@ -294,9 +283,6 @@ function App() {
   const cardBorder = isDark ? "#1f1f1f" : "#e8e8e8";
   const headingColor = isDark ? "#f5f5f5" : "#111";
   const subColor = isDark ? "#555" : "#aaa";
-  const badgeBg = isDark ? "rgba(255,255,255,0.04)" : "rgba(0,0,0,0.04)";
-  const badgeBorder = isDark ? "#1f1f1f" : "#e8e8e8";
-  const badgeColor = isDark ? "#888" : "#888";
   const codeBg = isDark ? "#0a0a0a" : "#f7f7f7";
   const codeColor = isDark ? "#a3a3a3" : "#555";
 
@@ -313,26 +299,25 @@ function App() {
           .preview-layout { flex-direction: column !important; gap: 32px !important; }
           .preview-card   { width: 100% !important; max-width: 100% !important; }
           .controls-card  { width: 100% !important; }
-          .badge-row      { flex-wrap: wrap !important; }
         }
       `}</style>
 
-      <div
-        style={{
-          width: "100%",
-          minHeight: "100vh",
-          background: pageBg,
-          display: "flex",
-          flexDirection: "column",
-          alignItems: "center",
-          justifyContent: "center",
-          padding: isMobile ? "48px 16px 64px" : "64px 24px",
-          gap: isMobile ? 32 : 48,
-          transition: "background 0.2s",
-        }}
-      >
-        <div style={{ textAlign: "center", maxWidth: 480 }}>
-          <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 10, marginBottom: 12 }}>
+      <ToastProvider mode={mode} theme={theme} position={position}>
+        <div
+          style={{
+            width: "100%",
+            minHeight: "100vh",
+            background: pageBg,
+            display: "flex",
+            flexDirection: "column",
+            alignItems: "center",
+            justifyContent: "center",
+            padding: isMobile ? "48px 16px 64px" : "64px 24px",
+            gap: isMobile ? 32 : 48,
+            transition: "background 0.2s",
+          }}
+        >
+          <div style={{ textAlign: "center", maxWidth: 480 }}>
             <h1
               style={{
                 fontSize: isMobile ? 26 : 34,
@@ -341,29 +326,28 @@ function App() {
                 letterSpacing: "-0.03em",
                 lineHeight: 1,
                 textTransform: "uppercase",
+                marginBottom: 12,
               }}
             >
               notchify
             </h1>
+            <p style={{ fontSize: isMobile ? 13 : 14, color: subColor, lineHeight: 1.6 }}>
+              toast notifications for React &amp; Next.js.
+            </p>
           </div>
-          <p style={{ fontSize: isMobile ? 13 : 14, color: subColor, lineHeight: 1.6, marginBottom: 14 }}>
-            toast notifications for React &amp; Next.js.
-          </p>
-        </div>
 
-        <div
-          className="preview-layout"
-          style={{
-            display: "flex",
-            flexDirection: isMobile ? "column" : "row",
-            alignItems: "stretch",
-            justifyContent: "center",
-            gap: isMobile ? 16 : 20,
-            width: "100%",
-            maxWidth: 900,
-          }}
-        >
-          <ToastProvider mode={mode} theme={theme} position={position}>
+          <div
+            className="preview-layout"
+            style={{
+              display: "flex",
+              flexDirection: isMobile ? "column" : "row",
+              alignItems: "stretch",
+              justifyContent: "center",
+              gap: isMobile ? 16 : 20,
+              width: "100%",
+              maxWidth: 900,
+            }}
+          >
             <div
               className="preview-card"
               style={{
@@ -377,10 +361,8 @@ function App() {
                 gap: 24,
               }}
             >
-              <div>
-                <div style={{ display: "flex", gap: 8, flexWrap: "wrap", marginBottom: 16 }}>
-                  <ToastButtons isDark={isDark} />
-                </div>
+              <div style={{ display: "flex", gap: 8, flexWrap: "wrap" }}>
+                <ToastButtons isDark={isDark} />
               </div>
               <VariantLegend isDark={isDark} />
 
@@ -403,62 +385,54 @@ function App() {
                 </div>
               </div>
             </div>
-          </ToastProvider>
 
-          <div
-            className="controls-card"
-            style={{
-              flex: isMobile ? "unset" : "0 0 350px",
-              background: cardBg,
-              border: `1px solid ${cardBorder}`,
-              borderRadius: 16,
-              padding: isMobile ? "24px 16px" : "28px 24px",
-              display: "flex",
-              flexDirection: "column",
-              gap: 24,
-            }}
-          >
-            <div>
-              <SectionLabel isDark={isDark}>Mode</SectionLabel>
-              <ModeToggle mode={mode} onChange={setMode} isDark={isDark} />
-            </div>
+            <div
+              className="controls-card"
+              style={{
+                flex: isMobile ? "unset" : "0 0 350px",
+                background: cardBg,
+                border: `1px solid ${cardBorder}`,
+                borderRadius: 16,
+                padding: isMobile ? "24px 16px" : "28px 24px",
+                display: "flex",
+                flexDirection: "column",
+                gap: 24,
+              }}
+            >
+              <div>
+                <SectionLabel isDark={isDark}>Mode</SectionLabel>
+                <ModeToggle mode={mode} onChange={setMode} isDark={isDark} />
+              </div>
 
-            <div>
-              <SectionLabel isDark={isDark}>Position{isMobile ? " (mobile)" : ""}</SectionLabel>
-              {isMobile ? (
-                <>
-                  <PositionToggle selected={position} onSelect={setPosition} isDark={isDark} />
-                  <p style={{ fontSize: 11, color: subColor, marginTop: 8 }}>
-                    On mobile, left/right positions auto-center.
-                  </p>
-                </>
-              ) : (
-                <PositionGrid selected={position} onSelect={setPosition} isDark={isDark} />
-              )}
+              <div>
+                <SectionLabel isDark={isDark}>Position{isMobile ? " (mobile)" : ""}</SectionLabel>
+                {isMobile ? (
+                  <>
+                    <PositionToggle selected={position} onSelect={setPosition} isDark={isDark} />
+                    <p style={{ fontSize: 11, color: subColor, marginTop: 8 }}>
+                      On mobile, left/right positions auto-center.
+                    </p>
+                  </>
+                ) : (
+                  <PositionGrid selected={position} onSelect={setPosition} isDark={isDark} />
+                )}
+              </div>
             </div>
           </div>
-        </div>
 
-        {/* ── footer ── */}
-        <p style={{ fontSize: 11, color: isDark ? "#333" : "#ccc", textAlign: "center" }}>
-          notchify · MIT ·{" "}
-          <a
-            href="https://github.com/iryanraushan"
-            style={{ color: isDark ? "#444" : "#bbb", textDecoration: "none" }}
-            target="_blank"
-            rel="noreferrer"
-          >
-            @iryanraushan
-          </a>
-        </p>
-      </div>
+          <p style={{ fontSize: 11, color: isDark ? "#333" : "#ccc", textAlign: "center" }}>
+            notchify · MIT ·{" "}
+            <a
+              href="https://github.com/iryanraushan"
+              style={{ color: isDark ? "#444" : "#bbb", textDecoration: "none" }}
+              target="_blank"
+              rel="noreferrer"
+            >
+              @iryanraushan
+            </a>
+          </p>
+        </div>
+      </ToastProvider>
     </>
   );
 }
-
-ReactDOM.createRoot(document.getElementById("root")!).render(
-  <>
-    <App />
-    <Analytics />
-  </>
-);

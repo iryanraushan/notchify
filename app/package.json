@@ -1,0 +1,23 @@
+{
+  "name": "notchify-web",
+  "private": true,
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@iryanraushan/notchify": "*",
+    "@vercel/analytics": "^2.0.1",
+    "react": "^18",
+    "react-dom": "^18"
+  },
+  "devDependencies": {
+    "@types/react": "^18",
+    "@types/react-dom": "^18",
+    "@vitejs/plugin-react": "^6.0.2",
+    "typescript": "^5",
+    "vite": "^8.0.16"
+  }
+}

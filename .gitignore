@@ -1,4 +1,7 @@
-/node_modules
-.env.env
+node_modules/
 .env
 .vercel
+dist/
+apps/dist/
+packages/notchify/dist/
+.DS_Store
