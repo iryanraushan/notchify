@@ -1,6 +1,6 @@
-import * as React from "react";
 import { ToastProvider, useToast } from "@iryanraushan/notchify";
 import type { ToastMode, ToastTheme, ToastPosition } from "@iryanraushan/notchify";
+import { useEffect, useState } from "react";
 
 const VARIANTS = [
   { label: "Default", variant: "default" as const, message: "Profile updated successfully.", color: "#3b82f6" },
@@ -22,10 +22,10 @@ const MOBILE_POSITIONS: { label: string; value: ToastPosition }[] = [
 const INSTALL_CMD = "npm i @iryanraushan/notchify";
 
 function useIsMobile() {
-  const [v, setV] = React.useState(() =>
+  const [v, setV] = useState(() =>
     typeof window !== "undefined" ? window.innerWidth <= 768 : false
   );
-  React.useEffect(() => {
+  useEffect(() => {
     const mq = window.matchMedia("(max-width: 768px)");
     const h = (e: MediaQueryListEvent) => setV(e.matches);
     mq.addEventListener("change", h);
@@ -222,7 +222,7 @@ function VariantLegend({ isDark }: { isDark: boolean }) {
 }
 
 function CopyButton({ text, isDark }: { text: string; isDark: boolean }) {
-  const [copied, setCopied] = React.useState(false);
+  const [copied, setCopied] = useState(false);
   const { toast } = useToast();
 
   const handleCopy = async () => {
@@ -273,8 +273,8 @@ function SectionLabel({ children, isDark }: { children: React.ReactNode; isDark:
 }
 
 export default function App() {
-  const [mode, setMode] = React.useState<ToastMode>("dark");
-  const [position, setPosition] = React.useState<ToastPosition>("bottom-right");
+  const [mode, setMode] = useState<ToastMode>("dark");
+  const [position, setPosition] = useState<ToastPosition>("bottom-right");
   const isMobile = useIsMobile();
 
   const isDark = mode === "dark";
