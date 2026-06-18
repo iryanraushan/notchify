@@ -1,6 +1,6 @@
 {
   "buildCommand": "npm run build --workspace=packages/notchify && npm run build --workspace=notchify-web",
-  "outputDirectory": "apps/dist",
+  "outputDirectory": "app/dist",
   "framework": null,
   "installCommand": "npm install"
 }

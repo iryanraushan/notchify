@@ -3,7 +3,7 @@
   "private": true,
   "workspaces": [
     "packages/*",
-    "apps"
+    "app"
   ],
   "scripts": {
     "build": "npm run build --workspace=packages/notchify",
