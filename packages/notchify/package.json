@@ -1,6 +1,6 @@
 {
   "name": "@iryanraushan/notchify",
-  "version": "1.2.2",
+  "version": "2.2.2",
   "description": "A classic toast notification library for React and Next.js",
   "author": "Raushan Kumar",
   "license": "MIT",
