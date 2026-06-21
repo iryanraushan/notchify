@@ -377,10 +377,12 @@ export const Toast = React.forwardRef<HTMLDivElement, ToastProps>(
       );
     }
 
-    const closeContent = closeIcon ?? (
-      variant === "loading" ? <SpinnerIcon color="#ffffff" /> : <CloseIcon color="#ffffff" />
-    );
     const hasIcon = icon != null;
+    const isLoadingWithIcon = variant === "loading" && hasIcon;
+    const closeContent = closeIcon ?? (
+      variant === "loading" && !hasIcon ? <SpinnerIcon color="#ffffff" /> : <CloseIcon color="#ffffff" />
+    );
+    const iconContent = isLoadingWithIcon ? <SpinnerIcon color={dotColor} /> : icon;
 
     return (
       <div
@@ -415,7 +417,7 @@ export const Toast = React.forwardRef<HTMLDivElement, ToastProps>(
         >
           {closeContent}
         </button>
-        {icon != null && <span data-notchify-icon="true">{icon}</span>}
+        {iconContent != null && <span data-notchify-icon="true">{iconContent}</span>}
         <span data-notchify-message="true">{message}</span>
         {action && <ActionButton action={action} textColor={textColor} />}
       </div>

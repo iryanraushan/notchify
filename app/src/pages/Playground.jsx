@@ -11,7 +11,7 @@ export default function Playground() {
       <Navbar />
 
       <main className="pt-24 pb-16">
-        <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+        <section className="w-full mx-auto px-4 sm:px-6 lg:px-8">
           <div className="mb-8">
             <div className="font-mono text-[11px] uppercase tracking-widest text-[#F59E0B] mb-2">
               Playground

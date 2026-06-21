@@ -96,10 +96,6 @@ export default function Docs() {
             className="glass-sidebar hidden lg:block sticky top-24 self-start max-h-[calc(100vh-7rem)] overflow-y-auto pr-2 rounded-xl"
             data-testid="docs-sidebar"
           >
-            <div className="font-mono text-[11px] uppercase tracking-widest text-[#737373] mb-3">
-              On this page
-            </div>
-
             <ul className="space-y-1">
               {SECTIONS.map((section) => (
                 <li key={section.id}>

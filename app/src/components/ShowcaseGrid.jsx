@@ -42,7 +42,7 @@ function DemoCard({ children, className = "", testId }) {
 function SectionTitle({ eyebrow, title, desc }) {
   return (
     <div className="mb-8">
-      <div className="font-mono text-[11px] uppercase tracking-[0.35em] text-[#F59E0B] mb-5">
+      <div className="text-[11px] uppercase text-[#F59E0B] mb-5">
         {eyebrow}
       </div>
 
@@ -464,19 +464,10 @@ export default function ShowcaseGrid() {
       data-testid="showcase-grid"
     >
       <div className="mb-20 text-center">
-        <div className="font-mono text-[11px] uppercase tracking-[0.35em] text-[#F59E0B] mb-6">
-          Showcase
-        </div>
-
         <h2 className="font-display text-5xl md:text-6xl font-semibold tracking-tighter">
           Every feature.{" "}
           <span className="text-[#737373]">Live.</span>
         </h2>
-
-        <p className="mt-6 text-lg md:text-xl text-[#A3A3A3] max-w-3xl mx-auto leading-relaxed">
-          Each demo uses the actual Notchify package — no screenshots,
-          no fakes. Click anything.
-        </p>
       </div>
 
       <div className="grid grid-cols-12 gap-6 md:gap-8">

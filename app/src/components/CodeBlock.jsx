@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { Check, Copy } from "lucide-react";
+import { Toast } from "@iryanraushan/notchify";
 
 // Lightweight syntax highlighter for our limited token set
 function highlight(code) {
@@ -66,6 +67,7 @@ export default function CodeBlock({
   const onCopy = async () => {
     try {
       await navigator.clipboard.writeText(code);
+      Toast.success("Code copied to clipboard!");
       setCopied(true);
       setTimeout(() => setCopied(false), 1500);
     } catch { }

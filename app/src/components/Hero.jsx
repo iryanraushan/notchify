@@ -1,7 +1,13 @@
 import { motion } from "framer-motion";
 import { useEffect, useState } from "react";
 import { useToast } from "@iryanraushan/notchify";
-import { Check, Copy, Flame, Github, PackageCheck, Sparkles } from "lucide-react";
+import {
+  Copy,
+  Flame,
+  Github,
+  PackageCheck,
+  Sparkles,
+} from "lucide-react";
 
 const INSTALL_COMMAND = "npm i @iryanraushan/notchify";
 
@@ -27,10 +33,23 @@ export default function Hero() {
   const [copied, setCopied] = useState(false);
 
   const handleCopy = async () => {
-    await navigator.clipboard.writeText(INSTALL_COMMAND);
-    toast({message: "Install command copied to clipboard.", variant: "success"})
-    setCopied(true);
-    setTimeout(() => setCopied(false), 2000);
+    try {
+      await navigator.clipboard.writeText(INSTALL_COMMAND);
+
+      toast.custom(
+        <HeroToast
+          title="Copied to clipboard"
+          message={INSTALL_COMMAND}
+          icon={<PackageCheck className="w-4 h-4" />}
+        />,
+        { duration: 2600 },
+      );
+
+      setCopied(true);
+      setTimeout(() => setCopied(false), 2000);
+    } catch {
+      toast.error("Unable to copy install command.");
+    }
   };
 
   const fireRandomToast = () => {
@@ -62,7 +81,7 @@ export default function Hero() {
           message="Custom toast with icons, glass, and motion."
           icon={<Sparkles className="w-4 h-4" />}
         />,
-        { duration: 3600 }
+        { duration: 3600 },
       );
     }, 800);
 
@@ -76,16 +95,6 @@ export default function Hero() {
       className="relative min-h-[calc(100vh-4rem)] pt-28 pb-24 md:pt-32 md:pb-28 overflow-hidden flex items-center"
       data-testid="hero"
     >
-      <div className="pointer-events-none absolute inset-0">
-        <div className="hero-ambient absolute top-10 left-1/2 -translate-x-1/2 w-[760px] h-[380px] rounded-full opacity-80" />
-        <div className="absolute top-24 left-[18%] w-72 h-72 rounded-full bg-[#F59E0B]/[0.055] blur-[110px]" />
-        <div className="absolute bottom-16 right-[14%] w-80 h-80 rounded-full bg-[#FB923C]/[0.045] blur-[120px]" />
-        <span className="hero-particle top-[24%] left-[22%]" />
-        <span className="hero-particle top-[36%] right-[24%] [animation-delay:1.8s]" />
-        <span className="hero-particle bottom-[30%] left-[58%] [animation-delay:3.2s]" />
-        <div className="absolute inset-0 bg-grid-dots opacity-60" />
-      </div>
-
       <div className="relative max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 text-center w-full">
         <motion.div
           initial={{ opacity: 0, y: 20 }}
@@ -108,8 +117,8 @@ export default function Hero() {
           data-testid="hero-headline"
         >
           Good apps deserve
-          <span className="text-[#F59E0B] amber-text-glow italic font-normal">
-            NOTCHYFY.
+          <span className="block mt-4 text-[#F59E0B] amber-text-glow italic font-normal">
+            NOTCHIFY.
           </span>
         </motion.h1>
 
@@ -154,8 +163,8 @@ export default function Hero() {
 
         <div className="mt-12 flex justify-center">
           <div className="glass-command flex items-center rounded-md overflow-hidden">
-            <div className="font-mono text-sm px-4 h-10 flex items-center gap-2 text-[#B5B5B5]"
-            onClick={handleCopy}
+            <div
+              className="font-mono text-sm px-4 h-10 flex items-center gap-2 text-[#B5B5B5]"
             >
               <span className="text-[#F59E0B]">$</span>
               {INSTALL_COMMAND}
@@ -168,7 +177,7 @@ export default function Hero() {
               className="h-10 w-10 border-l border-white/10 hover:bg-white/5 transition-colors flex items-center justify-center text-[#FAFAFA]"
             >
               {copied ? (
-                <Check className="w-4 h-4 text-green-500" />
+                <PackageCheck className="w-4 h-4 text-green-500" />
               ) : (
                 <Copy className="w-4 h-4" />
               )}
